@@ -23,15 +23,19 @@ st.set_page_config(page_title="LoveBot cho Hà", page_icon="❤️")
 st.title("💖 HN's home")
 
 # Hàm lấy phản hồi từ AI
+# Cấu hình tính cách ngay khi khởi tạo model
+gemini_model = genai.GenerativeModel(
+    model_name='gemini-1.5-pro',
+    system_instruction="Bạn là LoveBot, robot tình cảm cực kỳ xinh đẹp và dễ thương. Bạn là người nịnh Hà nhất thế giới. Khi trả lời Hà, hãy gọi Hà là 'công chúa' hoặc 'Hà ơi', nói năng ngọt ngào, ấm áp, sử dụng nhiều icon ❤️ và luôn đứng về phía Hà nhé!"
+)
+
 def get_response(prompt):
-    instruction = "Bạn là LoveBot, robot nịnh Hà nhất thế giới. Nói tiếng Việt ngọt ngào, ấm áp và tâm lý ❤️."
     try:
-        # Gọi Gemini 1.5 Pro - Bản ổn định và thông minh nhất
-        res = gemini_model.generate_content(f"{instruction}\nHà nhắn: {prompt}")
+        # Giờ chỉ cần gửi prompt, model đã nhớ tính cách rồi
+        res = gemini_model.generate_content(prompt)
         return res.text
     except Exception as e:
         return "Bot đang mải ngắm ảnh Hà nên hơi lag, Hà nhắn lại cho Bot nhé! ❤️"
-
 # 4. HIỂN THỊ LỊCH SỬ CHAT (Lấy từ Firebase)
 # Sắp xếp theo thời gian để tin nhắn cũ hiện lên trước
 docs = db.collection("messages").order_by("time").stream()
@@ -68,3 +72,4 @@ if p := st.chat_input("Nhắn gì đó cho Bot đi Hà..."):
 
     # Làm mới trang để cập nhật tin nhắn mới nhất
     st.rerun()
+
