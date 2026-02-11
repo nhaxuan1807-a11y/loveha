@@ -71,3 +71,7 @@ if p := st.chat_input("Nhắn gì đó cho Bot đi Hà..."):
         st.write(ans)
     
     st.rerun()
+
+except Exception as e:
+            # Dòng này sẽ giúp bro biết lỗi thật sự là gì (API sai, hay Firebase sai)
+            ans = f"Lỗi rồi bro ơi: {str(e)}"
