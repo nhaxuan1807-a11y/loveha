@@ -2,19 +2,21 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import google.generativeai as genai
-import ollama
 from datetime import datetime
 
 # 1. KẾT NỐI FIREBASE (Đã có file key.json trong thư mục)
-if not firebase_admin._apps:
-    cred = credentials.Certificate("key.json")
-    firebase_admin.initialize_app(cred)
-db = firestore.client()
+import json
 
+# Kết nối Firebase bằng Secrets (Lấy từ cài đặt của Streamlit Cloud)
+if not firebase_admin._apps:
+    key_dict = json.loads(st.secrets["FIREBASE_KEY"])
+    cred = credentials.Certificate(key_dict)
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 # 2. NÃO DỰ PHÒNG GEMINI (Dán key bro lấy từ aistudio.google.com vào đây)
 genai.configure(api_key="AIzaSyD2mdx4C6MyV8homepQ0EovotLyN4dbwTk")
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
-
+gemini_model = genai.GenerativeModel('gemini-3-pro')
 # 3. GIAO DIỆN
 st.set_page_config(page_title="LoveBot", page_icon="❤️")
 st.title("💖 HN's home")
@@ -46,4 +48,5 @@ if p := st.chat_input("Nhắn gì đó cho Bot đi Hà..."):
     with st.spinner("Bot đang nghĩ..."):
         ans = get_response(p)
     db.collection("messages").add({"role": "assistant", "content": ans, "time": datetime.now()})
+
     st.rerun()
