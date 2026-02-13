@@ -26,7 +26,7 @@ instruction = (
 )
 
 gemini_model = genai.GenerativeModel(
-    model_name='models/gemini-1.5-flash', # Thêm chữ 'models/' vào phía trước
+    model_name='gemini-1.5-flash', # Bỏ chữ models/ đi
     system_instruction=instruction
 )
 
@@ -73,6 +73,7 @@ if p := st.chat_input("Nhắn gì đó cho Bot đi Hà..."):
         st.write(ans)
     
     st.rerun()
+
 
 
 
